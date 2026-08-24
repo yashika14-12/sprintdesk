@@ -1,3 +1,5 @@
+import { KanbanBoard } from '@/features/board/KanbanBoard';
+
 export default function BoardPage() {
-  return <div className="p-4">Board page placeholder</div>;
+  return <KanbanBoard />;
 }

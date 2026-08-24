@@ -12,10 +12,12 @@ import {
 } from 'redux-persist';
 import { themeReducer } from '@/features/theme/themeSlice';
 import { authReducer } from '@/features/auth/authSlice';
+import { boardReducer } from '@/features/board/boardSlice';
 
 const rootReducer = combineReducers({
   theme: themeReducer,
   auth: authReducer,
+  board: boardReducer,
 });
 
 const storage: WebStorage = {
@@ -27,7 +29,7 @@ const storage: WebStorage = {
 const persistConfig = {
   key: 'sprintdesk',
   storage,
-  whitelist: ['theme'],
+  whitelist: ['theme', 'board'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
