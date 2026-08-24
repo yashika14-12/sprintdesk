@@ -66,4 +66,46 @@ describe('Modal', () => {
     );
     expect(screen.getByRole('dialog')).toHaveFocus();
   });
+
+  it('wraps Tab from the last focusable element back to the first', async () => {
+    render(
+      <Modal isOpen onClose={() => {}} title="Delete task">
+        <button type="button">Cancel</button>
+        <button type="button">Confirm</button>
+      </Modal>,
+    );
+    screen.getByRole('button', { name: 'Confirm' }).focus();
+    await userEvent.tab();
+    expect(screen.getByRole('button', { name: 'Cancel' })).toHaveFocus();
+  });
+
+  it('wraps Shift+Tab from the first focusable element back to the last', async () => {
+    render(
+      <Modal isOpen onClose={() => {}} title="Delete task">
+        <button type="button">Cancel</button>
+        <button type="button">Confirm</button>
+      </Modal>,
+    );
+    screen.getByRole('button', { name: 'Cancel' }).focus();
+    await userEvent.tab({ shift: true });
+    expect(screen.getByRole('button', { name: 'Confirm' })).toHaveFocus();
+  });
+
+  it('does not steal focus back to the dialog when a re-render passes a new onClose while open', () => {
+    const { rerender } = render(
+      <Modal isOpen onClose={() => {}} title="Delete task">
+        <button type="button">Confirm</button>
+      </Modal>,
+    );
+    screen.getByRole('button', { name: 'Confirm' }).focus();
+    expect(screen.getByRole('button', { name: 'Confirm' })).toHaveFocus();
+
+    rerender(
+      <Modal isOpen onClose={() => {}} title="Delete task">
+        <button type="button">Confirm</button>
+      </Modal>,
+    );
+
+    expect(screen.getByRole('button', { name: 'Confirm' })).toHaveFocus();
+  });
 });
