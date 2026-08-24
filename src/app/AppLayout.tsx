@@ -14,10 +14,10 @@ export function AppLayout() {
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
-      <header className="flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3 dark:border-gray-700 dark:bg-gray-800">
-        <nav className="flex items-center gap-6">
+      <header className="flex flex-wrap items-center justify-between gap-y-2 border-b border-gray-200 bg-white px-4 py-3 dark:border-gray-700 dark:bg-gray-800">
+        <nav className="flex flex-wrap items-center gap-x-4 gap-y-2">
           <span className="text-lg font-bold text-gray-900 dark:text-gray-100">SprintDesk</span>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
             {NAV_LINKS.map((link) => (
               <NavLink
                 key={link.to}
