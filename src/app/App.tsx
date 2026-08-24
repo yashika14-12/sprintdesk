@@ -5,6 +5,7 @@ import { persistor, store } from './store';
 import { queryClient } from './queryClient';
 import { AppRouter } from './router';
 import ThemeSync from '@/features/theme/ThemeSync';
+import { ToastContainer } from '@/components/ui/ToastContainer';
 
 export function App() {
   return (
@@ -12,6 +13,7 @@ export function App() {
       <PersistGate loading={null} persistor={persistor}>
         <QueryClientProvider client={queryClient}>
           <ThemeSync />
+          <ToastContainer />
           <AppRouter />
         </QueryClientProvider>
       </PersistGate>
