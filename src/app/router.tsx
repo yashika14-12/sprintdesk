@@ -1,6 +1,9 @@
 import { lazy, Suspense, type ReactNode } from 'react';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/Skeleton';
+import { ProtectedRoute } from '@/features/auth/ProtectedRoute';
+import { PublicOnlyRoute } from '@/features/auth/PublicOnlyRoute';
+import { AppLayout } from './AppLayout';
 
 const LoginPage = lazy(() => import('@/routes/LoginPage'));
 const DashboardPage = lazy(() => import('@/routes/DashboardPage'));
@@ -20,10 +23,23 @@ function withSuspense(children: ReactNode) {
 }
 
 const router = createBrowserRouter([
-  { path: '/login', element: withSuspense(<LoginPage />) },
-  { path: '/dashboard', element: withSuspense(<DashboardPage />) },
-  { path: '/board', element: withSuspense(<BoardPage />) },
-  { path: '/analytics', element: withSuspense(<AnalyticsPage />) },
+  {
+    element: <PublicOnlyRoute />,
+    children: [{ path: '/login', element: withSuspense(<LoginPage />) }],
+  },
+  {
+    element: <ProtectedRoute />,
+    children: [
+      {
+        element: <AppLayout />,
+        children: [
+          { path: '/dashboard', element: withSuspense(<DashboardPage />) },
+          { path: '/board', element: withSuspense(<BoardPage />) },
+          { path: '/analytics', element: withSuspense(<AnalyticsPage />) },
+        ],
+      },
+    ],
+  },
   { path: '/', element: <Navigate to="/dashboard" replace /> },
   { path: '*', element: <Navigate to="/dashboard" replace /> },
 ]);

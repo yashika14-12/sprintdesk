@@ -6,6 +6,7 @@ import { queryClient } from './queryClient';
 import { AppRouter } from './router';
 import ThemeSync from '@/features/theme/ThemeSync';
 import { ToastContainer } from '@/components/ui/ToastContainer';
+import { SessionBootstrap } from '@/features/auth/SessionBootstrap';
 
 export function App() {
   return (
@@ -14,7 +15,9 @@ export function App() {
         <QueryClientProvider client={queryClient}>
           <ThemeSync />
           <ToastContainer />
-          <AppRouter />
+          <SessionBootstrap>
+            <AppRouter />
+          </SessionBootstrap>
         </QueryClientProvider>
       </PersistGate>
     </Provider>

@@ -11,9 +11,11 @@ import {
   type WebStorage,
 } from 'redux-persist';
 import { themeReducer } from '@/features/theme/themeSlice';
+import { authReducer } from '@/features/auth/authSlice';
 
 const rootReducer = combineReducers({
   theme: themeReducer,
+  auth: authReducer,
 });
 
 const storage: WebStorage = {
