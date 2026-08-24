@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '@/app/store';
-import { sessionCleared, sessionEstablished } from './authSlice';
+import { accessTokenRefreshed, sessionCleared, sessionEstablished } from './authSlice';
 import { clearRefreshToken, getRefreshToken, setRefreshToken } from './refreshTokenStorage';
 import { getCurrentUser, refreshAccessToken } from './auth.service';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -27,7 +27,9 @@ export function SessionBootstrap({ children }: SessionBootstrapProps) {
       try {
         const refreshed = await refreshAccessToken(refreshToken);
         setRefreshToken(refreshed.refreshToken);
-        const user = await getCurrentUser(refreshed.accessToken);
+        // Put the token in the store first so getCurrentUser's authenticatedFetch call can attach it.
+        dispatch(accessTokenRefreshed(refreshed.accessToken));
+        const user = await getCurrentUser();
         if (isMounted) {
           dispatch(sessionEstablished({ user, accessToken: refreshed.accessToken }));
         }

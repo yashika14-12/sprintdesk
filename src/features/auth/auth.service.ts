@@ -1,4 +1,5 @@
 import type { AuthUser, LoginResponse, RefreshResponse } from '@/types/auth';
+import { authenticatedFetch } from '@/services/httpClient';
 
 const DUMMY_JSON_BASE_URL = 'https://dummyjson.com';
 
@@ -33,10 +34,9 @@ export async function refreshAccessToken(refreshToken: string): Promise<RefreshR
   return response.json() as Promise<RefreshResponse>;
 }
 
-export async function getCurrentUser(accessToken: string): Promise<AuthUser> {
-  const response = await fetch(`${DUMMY_JSON_BASE_URL}/auth/me`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+/** Reads the Bearer token from the store via authenticatedFetch — call only after dispatching accessTokenRefreshed/sessionEstablished. */
+export async function getCurrentUser(): Promise<AuthUser> {
+  const response = await authenticatedFetch(`${DUMMY_JSON_BASE_URL}/auth/me`);
 
   if (!response.ok) {
     throw new Error(`Failed to fetch current user: ${response.status}`);
