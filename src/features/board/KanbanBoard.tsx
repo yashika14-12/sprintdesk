@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DndContext, type DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import type { RootState, AppDispatch } from '@/app/store';
@@ -44,39 +44,42 @@ export function KanbanBoard() {
   const tasksById = useMemo(() => new Map((tasks ?? []).map((task) => [task.id, task])), [tasks]);
   const usersById = useMemo(() => new Map((users ?? []).map((user) => [user.id, user])), [users]);
 
-  function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event;
-    if (!over) return;
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event;
+      if (!over) return;
 
-    const activeId = Number(active.id);
-    const overId = String(over.id);
+      const activeId = Number(active.id);
+      const overId = String(over.id);
 
-    const fromColumn = findColumnOfTask(columns, activeId);
-    if (!fromColumn) return;
+      const fromColumn = findColumnOfTask(columns, activeId);
+      if (!fromColumn) return;
 
-    let toColumn: TaskStatus;
-    let toIndex: number;
+      let toColumn: TaskStatus;
+      let toIndex: number;
 
-    if ((BOARD_COLUMNS as string[]).includes(overId)) {
-      toColumn = overId as TaskStatus;
-      toIndex = columns[toColumn].length;
-    } else {
-      const overTaskId = Number(overId);
-      toColumn = findColumnOfTask(columns, overTaskId) ?? fromColumn;
-      toIndex = columns[toColumn].indexOf(overTaskId);
-    }
+      if ((BOARD_COLUMNS as string[]).includes(overId)) {
+        toColumn = overId as TaskStatus;
+        toIndex = columns[toColumn].length;
+      } else {
+        const overTaskId = Number(overId);
+        toColumn = findColumnOfTask(columns, overTaskId) ?? fromColumn;
+        toIndex = columns[toColumn].indexOf(overTaskId);
+      }
 
-    if (toColumn === fromColumn && toIndex === columns[fromColumn].indexOf(activeId)) return;
+      if (toColumn === fromColumn && toIndex === columns[fromColumn].indexOf(activeId)) return;
 
-    dispatch(moveTask({ taskId: activeId, fromColumn, toColumn, toIndex }));
+      dispatch(moveTask({ taskId: activeId, fromColumn, toColumn, toIndex }));
 
-    if (toColumn !== fromColumn) {
-      updateTaskMutation.mutate(
-        { id: activeId, patch: { status: toColumn } },
-        { onError: () => showToast('Failed to save the new task status', 'error') },
-      );
-    }
-  }
+      if (toColumn !== fromColumn) {
+        updateTaskMutation.mutate(
+          { id: activeId, patch: { status: toColumn } },
+          { onError: () => showToast('Failed to save the new task status', 'error') },
+        );
+      }
+    },
+    [columns, dispatch, updateTaskMutation, showToast],
+  );
 
   function handleConfirmDelete() {
     if (pendingDeleteId === null) return;

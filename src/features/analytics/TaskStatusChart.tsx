@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 import { useTasksQuery } from '@/hooks/queries/useTasksQuery';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -7,10 +8,9 @@ import { useChartColors } from './chartColors';
 export function TaskStatusChart() {
   const { data: tasks, isLoading } = useTasksQuery();
   const { categorical, ink } = useChartColors();
+  const data = useMemo(() => (tasks ? selectTaskStatusDistribution(tasks) : []), [tasks]);
 
   if (isLoading || !tasks) return <Skeleton className="h-64 w-full" />;
-
-  const data = selectTaskStatusDistribution(tasks);
 
   return (
     <div>

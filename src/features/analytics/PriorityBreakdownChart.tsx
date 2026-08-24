@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { useTasksQuery } from '@/hooks/queries/useTasksQuery';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -7,10 +8,9 @@ import { useChartColors } from './chartColors';
 export function PriorityBreakdownChart() {
   const { data: tasks, isLoading } = useTasksQuery();
   const { priorityOrdinal, ink } = useChartColors();
+  const data = useMemo(() => (tasks ? selectPriorityBreakdown(tasks) : []), [tasks]);
 
   if (isLoading || !tasks) return <Skeleton className="h-64 w-full" />;
-
-  const data = selectPriorityBreakdown(tasks);
 
   return (
     <div>

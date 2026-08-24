@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { useSprintsQuery } from '@/hooks/queries/useSprintsQuery';
 import { useTasksQuery } from '@/hooks/queries/useTasksQuery';
@@ -9,12 +10,11 @@ export function SprintVelocityChart() {
   const { data: tasks, isLoading: tasksLoading } = useTasksQuery();
   const { data: sprints, isLoading: sprintsLoading } = useSprintsQuery();
   const { categorical, ink } = useChartColors();
+  const data = useMemo(() => (tasks && sprints ? selectSprintVelocity(tasks, sprints) : []), [tasks, sprints]);
 
   if (tasksLoading || sprintsLoading || !tasks || !sprints) {
     return <Skeleton className="h-64 w-full" />;
   }
-
-  const data = selectSprintVelocity(tasks, sprints);
 
   return (
     <div>

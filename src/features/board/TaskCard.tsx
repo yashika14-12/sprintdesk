@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { Task } from '@/types/task';
@@ -15,7 +16,7 @@ export interface TaskCardProps {
   onOpen: (taskId: number) => void;
 }
 
-export function TaskCard({ task, assignee, onOpen }: TaskCardProps) {
+export const TaskCard = memo(function TaskCard({ task, assignee, onOpen }: TaskCardProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: task.id });
 
   return (
@@ -52,4 +53,4 @@ export function TaskCard({ task, assignee, onOpen }: TaskCardProps) {
       )}
     </div>
   );
-}
+});

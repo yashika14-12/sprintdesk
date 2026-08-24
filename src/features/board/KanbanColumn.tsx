@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import type { Task, TaskStatus } from '@/types/task';
@@ -19,7 +20,13 @@ export interface KanbanColumnProps {
   onOpenTask: (taskId: number) => void;
 }
 
-export function KanbanColumn({ column, taskIds, tasksById, usersById, onOpenTask }: KanbanColumnProps) {
+export const KanbanColumn = memo(function KanbanColumn({
+  column,
+  taskIds,
+  tasksById,
+  usersById,
+  onOpenTask,
+}: KanbanColumnProps) {
   const { setNodeRef } = useDroppable({ id: column });
 
   return (
@@ -43,4 +50,4 @@ export function KanbanColumn({ column, taskIds, tasksById, usersById, onOpenTask
       </div>
     </div>
   );
-}
+});
