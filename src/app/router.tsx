@@ -20,6 +20,7 @@ const router = createBrowserRouter([
   { path: '/board', element: withSuspense(<BoardPage />) },
   { path: '/analytics', element: withSuspense(<AnalyticsPage />) },
   { path: '/', element: <Navigate to="/dashboard" replace /> },
+  { path: '*', element: <Navigate to="/dashboard" replace /> },
 ]);
 
 export function AppRouter() {

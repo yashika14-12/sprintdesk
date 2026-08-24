@@ -8,7 +8,7 @@ import {
   REHYDRATE,
   persistReducer,
   persistStore,
-  type Storage as PersistStorage,
+  type WebStorage,
 } from 'redux-persist';
 import { themeReducer } from '@/features/theme/themeSlice';
 
@@ -16,10 +16,10 @@ const rootReducer = combineReducers({
   theme: themeReducer,
 });
 
-const storage: PersistStorage = {
-  getItem: (key) => Promise.resolve(window.localStorage.getItem(key)),
-  setItem: (key, value) => Promise.resolve(window.localStorage.setItem(key, value)),
-  removeItem: (key) => Promise.resolve(window.localStorage.removeItem(key)),
+const storage: WebStorage = {
+  getItem: (key) => new Promise((resolve) => resolve(window.localStorage.getItem(key))),
+  setItem: (key, value) => new Promise((resolve) => resolve(window.localStorage.setItem(key, value))),
+  removeItem: (key) => new Promise((resolve) => resolve(window.localStorage.removeItem(key))),
 };
 
 const persistConfig = {
