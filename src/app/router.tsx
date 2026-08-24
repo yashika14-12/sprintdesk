@@ -1,5 +1,6 @@
 import { lazy, Suspense, type ReactNode } from 'react';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
+import { Skeleton } from '@/components/ui/Skeleton';
 
 const LoginPage = lazy(() => import('@/routes/LoginPage'));
 const DashboardPage = lazy(() => import('@/routes/DashboardPage'));
@@ -7,7 +8,11 @@ const BoardPage = lazy(() => import('@/routes/BoardPage'));
 const AnalyticsPage = lazy(() => import('@/routes/AnalyticsPage'));
 
 function RouteFallback() {
-  return <div className="flex h-screen items-center justify-center">Loading…</div>;
+  return (
+    <div className="flex h-screen items-center justify-center p-4">
+      <Skeleton className="h-8 w-48" />
+    </div>
+  );
 }
 
 function withSuspense(children: ReactNode) {
