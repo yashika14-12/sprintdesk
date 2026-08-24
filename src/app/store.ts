@@ -13,11 +13,13 @@ import {
 import { themeReducer } from '@/features/theme/themeSlice';
 import { authReducer } from '@/features/auth/authSlice';
 import { boardReducer } from '@/features/board/boardSlice';
+import { notificationsReducer } from '@/features/notifications/notificationsSlice';
 
 const rootReducer = combineReducers({
   theme: themeReducer,
   auth: authReducer,
   board: boardReducer,
+  notifications: notificationsReducer,
 });
 
 const storage: WebStorage = {
@@ -29,7 +31,7 @@ const storage: WebStorage = {
 const persistConfig = {
   key: 'sprintdesk',
   storage,
-  whitelist: ['theme', 'board'],
+  whitelist: ['theme', 'board', 'notifications'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

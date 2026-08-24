@@ -1,7 +1,15 @@
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { NavLink, Outlet } from 'react-router-dom';
+import type { AppDispatch } from './store';
 import ThemeToggle from '@/features/theme/ThemeToggle';
 import { Button } from '@/components/ui/Button';
 import { useLogout } from '@/features/auth/useLogout';
+import { NotificationBell } from '@/features/notifications/NotificationBell';
+import { NotificationPanel } from '@/features/notifications/NotificationPanel';
+import { useNotificationsPolling } from '@/features/notifications/useNotificationsPolling';
+import { hydrateInitialNotifications } from '@/features/notifications/notificationsSlice';
+import { useNotificationsSeedQuery } from '@/hooks/queries/useNotificationsSeedQuery';
 
 const NAV_LINKS = [
   { to: '/dashboard', label: 'Dashboard' },
@@ -11,6 +19,16 @@ const NAV_LINKS = [
 
 export function AppLayout() {
   const logout = useLogout();
+  const dispatch = useDispatch<AppDispatch>();
+  const { data: initialNotifications } = useNotificationsSeedQuery();
+
+  useEffect(() => {
+    if (initialNotifications) {
+      dispatch(hydrateInitialNotifications(initialNotifications));
+    }
+  }, [initialNotifications, dispatch]);
+
+  useNotificationsPolling();
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
@@ -32,6 +50,10 @@ export function AppLayout() {
           </div>
         </nav>
         <div className="flex items-center gap-2">
+          <div className="relative">
+            <NotificationBell />
+            <NotificationPanel />
+          </div>
           <ThemeToggle />
           <Button variant="ghost" onClick={logout}>
             Log out
