@@ -8,13 +8,19 @@ import {
   REHYDRATE,
   persistReducer,
   persistStore,
+  type Storage as PersistStorage,
 } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
 import { themeReducer } from '@/features/theme/themeSlice';
 
 const rootReducer = combineReducers({
   theme: themeReducer,
 });
+
+const storage: PersistStorage = {
+  getItem: (key) => Promise.resolve(window.localStorage.getItem(key)),
+  setItem: (key, value) => Promise.resolve(window.localStorage.setItem(key, value)),
+  removeItem: (key) => Promise.resolve(window.localStorage.removeItem(key)),
+};
 
 const persistConfig = {
   key: 'sprintdesk',
